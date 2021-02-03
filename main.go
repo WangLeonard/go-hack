@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/WangLeonard/go-hack/callFuncByName"
 )
@@ -9,6 +10,7 @@ import (
 //go:noinline
 func HelloWorld(args *callFuncByName.MyString) {
 	fmt.Println("Hello " + args.Name + "!")
+	fmt.Println(time.Now().String())
 }
 
 var global = make(map[int64]interface{}, 10)
