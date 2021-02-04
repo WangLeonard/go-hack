@@ -23,11 +23,11 @@ func init() {
 
 type MyType struct {
 	Name string
+	Age  int64
 }
 
 func (t *MyType) Hello() {
-	fmt.Println("MyType Hello")
-	//fmt.Println("MyType Hello" + t.Name) // it will throw?
+	fmt.Println("MyType Hello"+t.Name, t.Age)
 }
 
 //go:noinline
@@ -39,6 +39,6 @@ func main() {
 	err := callFuncByName.HackCallFuncByNameWithStructArg("main.HelloWorld", &callFuncByName.MyString{"WWW"})
 	fmt.Println(err)
 
-	err = callFuncByName.HackCallFuncByNameWithInterfaceArg("main.HelloWorld2", &MyType{})
+	err = callFuncByName.HackCallFuncByNameWithInterfaceArg("main.HelloWorld2", &MyType{Name: "WWW222", Age: 18})
 	fmt.Println(err)
 }
