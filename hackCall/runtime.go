@@ -1,9 +1,6 @@
-package callFuncByName
+package hackCall
 
-import (
-	"errors"
-	"unsafe"
-)
+import _ "unsafe"
 
 type nameOff int32
 type typeOff int32
@@ -105,45 +102,3 @@ type funcInfo struct {
 
 //go:linkname funcname runtime.funcname
 func funcname(f funcInfo) string
-
-var funMaps map[string]uintptr = make(map[string]uintptr, 10)
-
-func init() {
-	mds := activeModules()
-
-	for _, md := range mds {
-		for _, fn := range md.ftab {
-			fi := funcInfo{(*_func)(unsafe.Pointer(&md.pclntable[fn.funcoff])), md}
-			name := funcname(fi)
-			funMaps[name] = fn.entry
-		}
-	}
-}
-
-type MyString struct {
-	Name string
-}
-
-func hackCallWithStructArg(fn interface{}, args *MyString)
-
-func HackCallFuncByNameWithStructArg(name string, args *MyString) error {
-	if fn, ok := funMaps[name]; ok {
-		hackCallWithStructArg(fn, args)
-		return nil
-	}
-	return errors.New("Function Not Found")
-}
-
-type Say interface {
-	Hello()
-}
-
-func hackCallWithStructInterface(fn interface{}, args Say)
-
-func HackCallFuncByNameWithInterfaceArg(name string, args Say) error {
-	if fn, ok := funMaps[name]; ok {
-		hackCallWithStructInterface(fn, args)
-		return nil
-	}
-	return errors.New("Function Not Found")
-}
