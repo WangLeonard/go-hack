@@ -11,10 +11,14 @@ func init() {
 	mds := activeModules()
 
 	for _, md := range mds {
-		for _, fn := range md.ftab {
-			fi := funcInfo{(*_func)(unsafe.Pointer(&md.pclntable[fn.funcoff])), md}
+		// ftab is lookup table for function by program counter.
+		nftab := len(md.ftab) - 1
+		for i := 0; i < nftab; i++ {
+			fi := funcInfo{(*_func)(unsafe.Pointer(&md.pclntable[md.ftab[i].funcoff])), md}
 			name := funcname(fi)
-			funMaps[name] = fn.entry
+			if name != "" {
+				funMaps[name] = md.ftab[i].entry
+			}
 		}
 	}
 }
